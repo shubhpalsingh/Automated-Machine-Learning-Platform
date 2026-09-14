@@ -96,20 +96,30 @@ Results are displayed in a **comparison table**.
 * Get real-time prediction output
 ##  Project Structure
 AutoML_Offline/
+│
+
+├── app.py                      # Main Streamlit application
 
 │
-├── app.py                      # Main Streamlit application
-│
+
 ├── src/
+
 │   ├── data_loader.py         # Dataset loading & validation
+
 │   ├── data_info.py           # Dataset analysis
+
 │   ├── data_cleaning.py       # Data preprocessing
+
 │   ├── feature_selection.py   # Feature handling
+
 │   ├── visualization.py       # All plots
+
 │   ├── model_training.py      # Model training + scaling
+
 │   ├── model_evaluation.py    # Evaluation metrics
+
 │   ├── prediction.py          # Prediction logic
-│
+
 └── requirements.txt           # Dependencies
 
  
