@@ -296,25 +296,6 @@ Use the selected model to generate predictions using new input values.
 
 ---
 
-## 📊 Example Classification Results
-
-One of the datasets tested with the platform produced the following model performance:
-
-| Model                | Accuracy |
-| -------------------- | -------: |
-| Logistic Regression  |   57.55% |
-| SVM                  |   54.55% |
-| Gradient Boosting    |   48.80% |
-| KNN                  |   48.65% |
-| Random Forest        |   44.60% |
-| Decision Tree        |   42.10% |
-| AdaBoost             |   20.00% |
-| Gaussian Naive Bayes |   14.40% |
-
-> Model performance depends heavily on the dataset, preprocessing, selected features, and train/test split.
-
----
-
 ## 🎯 Project Objectives
 
 The main objectives of this project are to:
