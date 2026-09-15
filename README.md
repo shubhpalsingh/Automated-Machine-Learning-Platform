@@ -1,4 +1,4 @@
-# 🤖 Offline Automated Machine Learning Platform
+# 🤖  Automated Machine Learning Platform
 
 An **offline Automated Machine Learning (AutoML) platform** built with **Python and Streamlit** that simplifies the machine learning workflow from dataset upload to model prediction.
 
