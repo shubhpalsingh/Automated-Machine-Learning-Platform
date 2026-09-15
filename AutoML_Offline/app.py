@@ -68,7 +68,7 @@ section[data-testid="stSidebar"] button:hover {
 """, unsafe_allow_html=True)
 
 # Page title
-st.title("Offline Automated Machine Learning Platform")
+st.title("Automated Machine Learning Platform")
 
 
 # ==============================
