@@ -258,14 +258,36 @@ elif step == "Data Visualization":
     st.header("5. Data Visualization")
 
     if "df" not in st.session_state:
+
         st.warning("Upload dataset first")
 
     else:
+
         df = st.session_state["df"]
 
-        # Separate column types
-        numeric_cols = df.select_dtypes(include=['int64', 'float64']).columns.tolist()
+        # ==========================================
+        # COLUMN TYPES
+        # ==========================================
+
+        numeric_cols = df.select_dtypes(
+            include=["number"]
+        ).columns.tolist()
+
+        categorical_cols = df.select_dtypes(
+            include=["object", "category"]
+        ).columns.tolist()
+
         all_cols = df.columns.tolist()
+
+        # Columns suitable for pie charts
+        pie_cols = [
+            col for col in all_cols
+            if df[col].nunique(dropna=True) <= 15
+        ]
+
+        # ==========================================
+        # PLOT TYPE
+        # ==========================================
 
         plot_type = st.selectbox(
             "Select Plot Type",
@@ -281,51 +303,321 @@ elif step == "Data Visualization":
             ],
         )
 
-        # -------------------------
-        # Dynamic Column Selection
-        # -------------------------
+        # ==========================================
+        # BAR GRAPH
+        # ==========================================
 
         if plot_type == "Bar Graph":
-            col = st.selectbox("Select Column", all_cols)
-            fig = plot_bar(df, col)
-            st.pyplot(fig)
+
+            if len(numeric_cols) == 0:
+
+                st.warning(
+                    "Bar graph requires at least one numeric column."
+                )
+
+            else:
+
+                x = st.selectbox(
+                    "X Axis",
+                    all_cols,
+                    key="bar_x"
+                )
+
+                # Don't allow same column for X and Y
+                y_options = [
+                    col
+                    for col in numeric_cols
+                    if col != x
+                ]
+
+                if len(y_options) == 0:
+
+                    st.warning(
+                        "Please select a different column for the Y axis."
+                    )
+
+                else:
+
+                    y = st.selectbox(
+                        "Y Axis",
+                        y_options,
+                        key="bar_y"
+                    )
+
+                    fig = plot_bar(
+                        df,
+                        x,
+                        y
+                    )
+
+                    st.pyplot(fig)
+
+        # ==========================================
+        # SCATTER PLOT
+        # ==========================================
 
         elif plot_type == "Scatter Plot":
-            x = st.selectbox("X Axis", numeric_cols)
-            y = st.selectbox("Y Axis", numeric_cols)
-            fig = plot_scatter(df, x, y)
-            st.pyplot(fig)
+
+            if len(numeric_cols) < 2:
+
+                st.warning(
+                    "Scatter plot requires at least two numeric columns."
+                )
+
+            else:
+
+                x = st.selectbox(
+                    "X Axis",
+                    numeric_cols,
+                    key="scatter_x"
+                )
+
+                y_options = [
+                    col
+                    for col in numeric_cols
+                    if col != x
+                ]
+
+                y = st.selectbox(
+                    "Y Axis",
+                    y_options,
+                    key="scatter_y"
+                )
+
+                fig = plot_scatter(
+                    df,
+                    x,
+                    y
+                )
+
+                st.pyplot(fig)
+
+        # ==========================================
+        # PIE CHART
+        # ==========================================
 
         elif plot_type == "Pie Chart":
-            col = st.selectbox("Select Column", all_cols)
-            fig = plot_pie(df, col)
-            st.pyplot(fig)
+
+            if len(pie_cols) == 0:
+
+                st.warning(
+                    "No suitable categorical columns found "
+                    "for a pie chart."
+                )
+
+            else:
+
+                col = st.selectbox(
+                    "Select Category Column",
+                    pie_cols,
+                    key="pie_col"
+                )
+
+                fig = plot_pie(
+                    df,
+                    col
+                )
+
+                st.pyplot(fig)
+
+        # ==========================================
+        # HISTOGRAM
+        # ==========================================
 
         elif plot_type == "Histogram":
-            col = st.selectbox("Select Column", numeric_cols)
-            fig = plot_histogram(df, col)
-            st.pyplot(fig)
+
+            if len(numeric_cols) == 0:
+
+                st.warning(
+                    "Histogram requires a numeric column."
+                )
+
+            else:
+
+                col = st.selectbox(
+                    "Select Numeric Column",
+                    numeric_cols,
+                    key="hist_col"
+                )
+
+                fig = plot_histogram(
+                    df,
+                    col
+                )
+
+                st.pyplot(fig)
+
+        # ==========================================
+        # HEATMAP
+        # ==========================================
 
         elif plot_type == "Heatmap":
-            fig = plot_heatmap(df[numeric_cols])
-            st.pyplot(fig)
+
+            if len(numeric_cols) < 2:
+
+                st.warning(
+                    "Heatmap requires at least two numeric columns."
+                )
+
+            else:
+
+                fig = plot_heatmap(
+                    df
+                )
+
+                st.pyplot(fig)
+
+        # ==========================================
+        # BOX PLOT
+        # ==========================================
 
         elif plot_type == "Box Plot":
-            col = st.selectbox("Select Column", numeric_cols)
-            fig = plot_box(df, col)
-            st.pyplot(fig)
+
+            if len(numeric_cols) == 0:
+
+                st.warning(
+                    "Box plot requires at least one numeric column."
+                )
+
+            else:
+
+                x = st.selectbox(
+                    "X Axis / Category",
+                    all_cols,
+                    key="box_x"
+                )
+
+                y_options = [
+                    col
+                    for col in numeric_cols
+                    if col != x
+                ]
+
+                # If X itself is numeric, it can still be used
+                # because visualization.py will automatically
+                # bin it.
+                if len(y_options) == 0:
+
+                    st.warning(
+                        "Please select a different column for Y."
+                    )
+
+                else:
+
+                    y = st.selectbox(
+                        "Y Axis / Numeric Value",
+                        y_options,
+                        key="box_y"
+                    )
+
+                    fig = plot_box(
+                        df,
+                        x,
+                        y
+                    )
+
+                    st.pyplot(fig)
+
+        # ==========================================
+        # VIOLIN PLOT
+        # ==========================================
 
         elif plot_type == "Violin Plot":
-            col = st.selectbox("Select Column", numeric_cols)
-            fig = plot_violin(df, col)
-            st.pyplot(fig)
+
+            if len(numeric_cols) == 0:
+
+                st.warning(
+                    "Violin plot requires at least one numeric column."
+                )
+
+            else:
+
+                x = st.selectbox(
+                    "X Axis / Category",
+                    all_cols,
+                    key="violin_x"
+                )
+
+                y_options = [
+                    col
+                    for col in numeric_cols
+                    if col != x
+                ]
+
+                if len(y_options) == 0:
+
+                    st.warning(
+                        "Please select a different column for Y."
+                    )
+
+                else:
+
+                    y = st.selectbox(
+                        "Y Axis / Numeric Value",
+                        y_options,
+                        key="violin_y"
+                    )
+
+                    fig = plot_violin(
+                        df,
+                        x,
+                        y
+                    )
+
+                    st.pyplot(fig)
+
+        # ==========================================
+        # 3D PLOT
+        # ==========================================
 
         elif plot_type == "3D Plot":
-            x = st.selectbox("X Axis", numeric_cols)
-            y = st.selectbox("Y Axis", numeric_cols)
-            z = st.selectbox("Z Axis", numeric_cols)
-            fig = plot_3d(df, x, y, z)
-            st.pyplot(fig)
+
+            if len(numeric_cols) < 3:
+
+                st.warning(
+                    "3D plot requires at least three numeric columns."
+                )
+
+            else:
+
+                x = st.selectbox(
+                    "X Axis",
+                    numeric_cols,
+                    key="3d_x"
+                )
+
+                y_options = [
+                    col
+                    for col in numeric_cols
+                    if col != x
+                ]
+
+                y = st.selectbox(
+                    "Y Axis",
+                    y_options,
+                    key="3d_y"
+                )
+
+                z_options = [
+                    col
+                    for col in numeric_cols
+                    if col != x and col != y
+                ]
+
+                z = st.selectbox(
+                    "Z Axis",
+                    z_options,
+                    key="3d_z"
+                )
+
+                fig = plot_3d(
+                    df,
+                    x,
+                    y,
+                    z
+                )
+
+                st.pyplot(fig)
 
 
 # ==============================
