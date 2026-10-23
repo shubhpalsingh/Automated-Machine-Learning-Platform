@@ -2,7 +2,7 @@ ONLINE LINK - https://offline-automated-machine-learning-platform-ng6hojp8zzpjt6
 
 # 🤖  Automated Machine Learning Platform
 
-An **offline Automated Machine Learning (AutoML) platform** built with **Python and Streamlit** that simplifies the machine learning workflow from dataset upload to model prediction.
+An **Automated Machine Learning (AutoML) platform** built with **Python and Streamlit** that simplifies the machine learning workflow from dataset upload to model prediction.
 
 The platform allows users to upload a CSV or Excel dataset, inspect and clean the data, visualize relationships, select features and target variables, train multiple machine learning models, compare their performance, and use the best-performing model for predictions — all through an interactive web interface.
 
